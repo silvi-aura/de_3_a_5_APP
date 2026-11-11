@@ -1158,7 +1158,7 @@ function syncProfile(){
   if(!S.profiles.find(x=>x.id===S.activeId) || !childAllowed(S.activeId)) S.activeId = S.profiles.length ? S.profiles[0].id : null;
   LS.set("activeChild", S.activeId);
   S.profile = S.profiles.find(x=>x.id===S.activeId) || null;
-  S.month = S.profile ? childMonth(S.profile) : LS.get("month",6);
+  S.month = S.profile ? childMonth(S.profile) : Math.min(CONFIG.maxMonth,Math.max(CONFIG.minMonth,+LS.get("month",CONFIG.minMonth)||CONFIG.minMonth));
   S.calc = S.profile ? {birth:S.profile.birth, ga:S.profile.ga} : null;
   S.menuDay = null; S.menuPreview = false;
   S.recEx = (S.profile && S.profile.allergies) ? S.profile.allergies.slice() : []; // NUEVO: aplica las alergias del perfil como filtro por defecto
