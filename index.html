@@ -1152,7 +1152,8 @@ function daysUntilMonth(m){ if(!S.profile) return null; const b=parseKey(S.profi
 function babyName(){ return S.profile ? esc(S.profile.name) : "tu bebé"; }
 function norm(s){ return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase(); }
 function childColor(c){ return CAT_KEYS[(c.color||0)%4]; }
-function ageLabel(c){ const a=ageParts(c.birth); if(a.days<0) return "Nace en "+(-a.days)+" días"; return a.m+" "+(a.m===1?"mes":"meses")+" y "+a.d+" "+(a.d===1?"día":"días"); }
+function ageYM(m){ const y=Math.floor(m/12), r=m%12; return y+" "+(y===1?"año":"años")+(r?" y "+r+" "+(r===1?"mes":"meses"):""); }
+function ageLabel(c){ const a=ageParts(c.birth); if(a.days<0) return "Nace en "+(-a.days)+" días"; return ageYM(a.m); }
 function childAllowed(id){ const i=S.profiles.findIndex(x=>x.id===id); return i>=0 && (isPremium() || i<CONFIG.freeChildren); }
 function syncProfile(){
   if(!S.profiles.find(x=>x.id===S.activeId) || !childAllowed(S.activeId)) S.activeId = S.profiles.length ? S.profiles[0].id : null;
@@ -1396,7 +1397,7 @@ function viewHome(){
   let h="";
   if(p){
     const a=ageParts(p.birth);
-    const txt = a.days<0 ? `Faltan ${-a.days} días para conocer a ${esc(p.name)}` : `${esc(p.name)} tiene ${a.m} ${a.m===1?"mes":"meses"} y ${a.d} ${a.d===1?"día":"días"}`;
+    const txt = a.days<0 ? `Faltan ${-a.days} días para conocer a ${esc(p.name)}` : `${esc(p.name)} tiene ${ageYM(a.m)}`;
     let corr="";
     if(p.ga<37 && a.days>=0 && a.m<24){ const cd=a.days-(40-p.ga)*7; corr=`<p class="muted mt-s">Edad corregida: ${cd<0?"aún no cumple la fecha prevista":Math.floor(cd/30.44)+" meses aprox."}</p>`; }
     const chips = S.profiles.length>1
